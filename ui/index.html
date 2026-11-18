@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'; script-src 'self'; img-src 'self' data:">
+<title>OpenVPN Connect</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<svg class="sprite" width="0" height="0" aria-hidden="true">
+  <symbol id="i-escudo" viewBox="0 0 24 24"><path d="M12 3l7.5 3v5.5c0 4.6-3.1 8.2-7.5 9.5-4.4-1.3-7.5-4.9-7.5-9.5V6L12 3z"/><path d="M9 12l2.2 2.2L15.5 10"/></symbol>
+  <symbol id="i-mais" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-baixar" viewBox="0 0 24 24"><path d="M12 4v11M7.5 10.5L12 15l4.5-4.5M5 19h14"/></symbol>
+  <symbol id="i-subir" viewBox="0 0 24 24"><path d="M12 15V4M7.5 8.5L12 4l4.5 4.5M5 19h14"/></symbol>
+  <symbol id="i-lixo" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12h10l1-12M9 7V4h6v3"/></symbol>
+  <symbol id="i-lapis" viewBox="0 0 24 24"><path d="M4 20l1-4L16.5 4.5a2 2 0 012.8 0l.2.2a2 2 0 010 2.8L8 19l-4 1z"/></symbol>
+  <symbol id="i-sol" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6L7 7M17 17l1.4 1.4M5.6 18.4L7 17M17 7l1.4-1.4"/></symbol>
+  <symbol id="i-lua" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 019.5 4 8 8 0 1020 14.5z"/></symbol>
+  <symbol id="i-auto" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2.5"/><path d="M8 20h8M12 16v4"/></symbol>
+  <symbol id="i-relogio" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></symbol>
+  <symbol id="i-engrenagem" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 14.5a1.6 1.6 0 00.3 1.8l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.6 1.6 0 00-1.8-.3 1.6 1.6 0 00-1 1.5V21a2 2 0 11-4 0v-.1a1.6 1.6 0 00-1-1.5 1.6 1.6 0 00-1.8.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.6 1.6 0 00.3-1.8 1.6 1.6 0 00-1.5-1H3a2 2 0 110-4h.1a1.6 1.6 0 001.5-1 1.6 1.6 0 00-.3-1.8l-.1-.1a2 2 0 112.8-2.8l.1.1a1.6 1.6 0 001.8.3h0a1.6 1.6 0 001-1.5V3a2 2 0 114 0v.1a1.6 1.6 0 001 1.5 1.6 1.6 0 001.8-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.6 1.6 0 00-.3 1.8v0a1.6 1.6 0 001.5 1H21a2 2 0 110 4h-.1a1.6 1.6 0 00-1.5 1z"/></symbol>
+  <symbol id="i-globo" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.5 2.6 3.5 5.4 3.5 8.5s-1 5.9-3.5 8.5c-2.5-2.6-3.5-5.4-3.5-8.5s1-5.9 3.5-8.5z"/></symbol>
+</svg>
+
+<div id="app">
+  <aside id="lateral" class="vidro-painel">
+    <div class="marca">
+      <span class="marca-icone"><svg class="icone"><use href="#i-escudo"/></svg></span>
+      <div><strong>OpenVPN</strong><small>Connect</small></div>
+    </div>
+    <div class="lista-titulo">Conexões</div>
+    <ul id="lista" role="listbox" aria-label="Conexões"></ul>
+    <div id="lista-vazia" class="vazio hidden">Nenhuma conexão ainda.<br>Importe um arquivo <code>.ovpn</code>.</div>
+    <div class="lateral-acoes">
+      <button class="btn primario" id="b-importar"><svg class="icone"><use href="#i-mais"/></svg>Importar</button>
+      <button class="btn" id="b-exportar"><svg class="icone"><use href="#i-subir"/></svg>Exportar</button>
+    </div>
+    <button class="btn prefs" id="b-prefs"><svg class="icone"><use href="#i-engrenagem"/></svg>Preferências</button>
+  </aside>
+
+  <main id="principal">
+    <header class="topo">
+      <div id="tema" class="segmentos" role="group" aria-label="Tema">
+        <button data-tema="automatico" title="Automático"><svg class="icone"><use href="#i-auto"/></svg></button>
+        <button data-tema="claro" title="Claro"><svg class="icone"><use href="#i-sol"/></svg></button>
+        <button data-tema="escuro" title="Escuro"><svg class="icone"><use href="#i-lua"/></svg></button>
+      </div>
+    </header>
+
+    <section id="vazio-geral" class="cartao vidro hidden">
+      <svg class="icone grande"><use href="#i-escudo"/></svg>
+      <h2>Sem conexões</h2>
+      <p>Importe um perfil <code>.ovpn</code> ou um pacote de conexões exportado.</p>
+      <button class="btn primario" id="b-importar2">Importar conexões</button>
+    </section>
+
+    <section id="detalhe" class="hidden">
+      <div class="cartao vidro">
+        <div class="cabeca">
+          <h2 id="d-nome"></h2>
+          <div class="mini">
+            <button class="botao-icone vidro pequeno" id="b-renomear" title="Renomear"><svg class="icone"><use href="#i-lapis"/></svg></button>
+            <button class="botao-icone vidro pequeno" id="b-remover" title="Remover"><svg class="icone"><use href="#i-lixo"/></svg></button>
+          </div>
+        </div>
+        <div class="estado-linha"><span id="ponto" class="ponto"></span><span id="d-estado">Desconectado</span></div>
+
+        <div id="credenciais" class="credenciais hidden">
+          <label>Usuário<input id="c-usuario" autocomplete="off" spellcheck="false"></label>
+          <label>Senha<input id="c-senha" type="password" autocomplete="off"></label>
+          <label class="linha-check"><span class="interruptor"><input type="checkbox" id="c-lembrar"><span></span></span>Lembrar neste computador</label>
+          <button class="link" id="b-esquecer">Esquecer credenciais salvas</button>
+        </div>
+
+        <div id="erro" class="aviso hidden"></div>
+        <button class="btn primario grande" id="b-conectar">Conectar</button>
+      </div>
+
+      <div class="grade-stats">
+        <div class="cartao vidro stat"><svg class="icone"><use href="#i-relogio"/></svg><div><small>Tempo</small><strong id="s-tempo">—</strong></div></div>
+        <div class="cartao vidro stat"><svg class="icone"><use href="#i-globo"/></svg><div><small>Servidor</small><strong id="s-servidor">—</strong></div></div>
+        <div class="cartao vidro stat"><svg class="icone"><use href="#i-escudo"/></svg><div><small>IP na VPN</small><strong id="s-ip">—</strong></div></div>
+        <div class="cartao vidro stat"><svg class="icone"><use href="#i-baixar"/></svg><div><small>Recebido</small><strong id="s-in">—</strong></div></div>
+        <div class="cartao vidro stat"><svg class="icone"><use href="#i-subir"/></svg><div><small>Enviado</small><strong id="s-out">—</strong></div></div>
+      </div>
+
+      <details class="cartao vidro registro">
+        <summary>Registro</summary>
+        <pre id="log" tabindex="0"></pre>
+      </details>
+    </section>
+    <div id="rodape"></div>
+  </main>
+</div>
+
+<div id="modal" class="modal hidden" role="dialog" aria-modal="true">
+  <div class="modal-caixa vidro-painel">
+    <h3 id="m-titulo"></h3>
+    <div id="m-corpo"></div>
+    <div class="modal-acoes" id="m-acoes"></div>
+  </div>
+</div>
+<div id="toast" class="toast hidden"></div>
+<script src="app.js"></script>
+</body>
+</html>

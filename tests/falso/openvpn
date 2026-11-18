@@ -1,0 +1,23 @@
+#!/usr/bin/env node
+// OpenVPN falso: só implementa o necessário da interface de gerenciamento.
+const net = require('net'), fs = require('fs');
+const a = process.argv.slice(2), v = (k) => a[a.indexOf(k) + 1];
+const i = a.indexOf('--management'), porta = Number(a[i + 2]), senha = fs.readFileSync(a[i + 3], 'utf8').trim();
+const auth = a.includes('--auth-user-pass') ? fs.readFileSync(v('--auth-user-pass'), 'utf8').split('\n')[0] : '';
+const ruim = auth === 'errado';
+const srv = net.createServer((s) => {
+  let ok = false;
+  s.write('ENTER PASSWORD:');
+  s.on('data', (d) => {
+    for (const l of d.toString().split('\n').filter(Boolean)) {
+      if (!ok) { ok = l === senha; s.write(ok ? 'SUCCESS: password is correct\r\n' : 'ERROR: bad password\r\n'); if (!ok) return s.end();
+        setTimeout(() => {
+          s.write('>STATE:1,CONNECTING,,,,\r\n>STATE:2,AUTH,,,,\r\n');
+          if (ruim) { s.write(">PASSWORD:Verification Failed: 'Auth'\r\n"); setTimeout(() => process.exit(1), 100); return; }
+          s.write('>STATE:3,CONNECTED,SUCCESS,10.8.0.2,203.0.113.7,1194,,\r\n>LOG:3,I,Initialization Sequence Completed\r\n>BYTECOUNT:2048,1024\r\n');
+        }, 100);
+      } else if (/^signal SIGTERM/.test(l)) { s.write('SUCCESS: signal SIGTERM thrown\r\n'); setTimeout(() => process.exit(0), 50); }
+    }
+  });
+});
+srv.listen(porta, '127.0.0.1');
