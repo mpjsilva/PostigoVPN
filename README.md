@@ -1,6 +1,6 @@
 # PostigoVPN
 
-Interface gráfica (Electron) para o **OpenVPN CLI** no Linux, no visual Liquid Glass do Dual Messenger.
+Interface gráfica (Electron) para o **OpenVPN CLI** no Linux.
 
 *Postigo*: a portinha dentro do portão grande, por onde se passa sem abrir tudo.
 

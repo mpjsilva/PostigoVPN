@@ -16,5 +16,5 @@ contextBridge.exposeInMainWorld('api', {
   setIniciarComSistema: (v) => inv('set-iniciar-com-sistema', v),
   buscarAtualizacao: () => inv('buscar-atualizacao'),
   setConfig: (c) => inv('set-config', c),
-  aoEstado: ouvir('estado'), aoLog: ouvir('log'), aoBytes: ouvir('bytes'), aoPerfis: ouvir('perfis'),
+  aoEstado: ouvir('estado'), aoLog: ouvir('log'), aoBytes: ouvir('bytes'), aoPerfis: ouvir('perfis'), aoToast: ouvir('toast'),
 });

@@ -1,8 +1,8 @@
 {
   "name": "postigovpn",
   "productName": "PostigoVPN",
-  "version": "1.2.0",
-  "description": "PostigoVPN: interface gráfica para o OpenVPN (CLI), no visual Liquid Glass do Dual Messenger.",
+  "version": "1.2.1",
+  "description": "PostigoVPN: interface gráfica para o OpenVPN (CLI).",
   "main": "src/main.js",
   "author": "mpjsilva",
   "private": true,

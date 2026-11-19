@@ -177,6 +177,7 @@ async function iniciar() {
   }
   desenhar();
 
+  window.api.aoToast((m) => toast(m));
   window.api.aoEstado((e) => {
     const anterior = E.estado.estado; E.estado = e;
     if (e.ipLocal) E.ipLocal = e.ipLocal; if (e.ipRemoto) E.ipRemoto = e.ipRemoto;

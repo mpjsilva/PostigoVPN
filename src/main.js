@@ -167,6 +167,7 @@ app.whenReady().then(() => {
       atualizador = criarAtualizador({
         autoUpdater, dialog, janela: () => janela,
         antesDeSair: () => { saindo = true; conexao.desconectar(); },
+        notificar: (m) => enviar('toast', m),
         aviso: () => (conexao.filho ? 'A VPN conectada será desconectada durante a atualização.' : ''),
         ativo: () => store.getConfig().atualizacaoAutomatica !== false,
         log: (...a) => console.warn('[atualizador]', ...a),

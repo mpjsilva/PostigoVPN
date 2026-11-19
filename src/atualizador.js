@@ -7,7 +7,7 @@
 
 const HORAS = 6;
 
-function criarAtualizador({ autoUpdater, dialog, janela, antesDeSair, nome = 'PostigoVPN', aviso = () => '', ativo = () => true, log = () => {}, intervaloHoras = HORAS }) {
+function criarAtualizador({ autoUpdater, dialog, janela, antesDeSair, nome = 'PostigoVPN', aviso = () => '', notificar = () => {}, ativo = () => true, log = () => {}, intervaloHoras = HORAS }) {
   autoUpdater.autoDownload = false;
   autoUpdater.autoInstallOnAppQuit = false;
 
@@ -24,6 +24,7 @@ function criarAtualizador({ autoUpdater, dialog, janela, antesDeSair, nome = 'Po
   autoUpdater.on('update-available', async (info) => {
     const pedida = manual;
     manual = false;
+    if (pedida) notificar(`Versão ${info.version} disponível.`);
     if (baixando || (adiada === info.version && !pedida)) return;
     const r = await caixa({
       type: 'question',
@@ -51,7 +52,7 @@ function criarAtualizador({ autoUpdater, dialog, janela, antesDeSair, nome = 'Po
   autoUpdater.on('update-not-available', async () => {
     if (!manual) return;
     manual = false;
-    await caixa({ type: 'info', title: 'Atualização', message: 'Você já está na versão mais recente.', buttons: ['OK'] });
+    notificar('Você já está na versão mais recente.');
   });
 
   autoUpdater.on('update-downloaded', () => {
@@ -66,7 +67,7 @@ function criarAtualizador({ autoUpdater, dialog, janela, antesDeSair, nome = 'Po
     const pedida = manual;
     manual = false;
     if (!pedida) return;
-    await caixa({ type: 'error', title: 'Atualização', message: 'Não consegui verificar atualizações.', detail: String((err && err.message) || err).slice(0, 300), buttons: ['OK'] });
+    notificar('Não consegui verificar atualizações: ' + String((err && err.message) || err).slice(0, 120));
   });
 
   function verificar({ pedido = false } = {}) {

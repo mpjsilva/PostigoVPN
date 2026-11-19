@@ -12,8 +12,9 @@ function montar({ resposta = 0, ativo = true } = {}) {
   const caixas = [];
   const dialog = { showMessageBox: async (...a) => { caixas.push(a[a.length - 1]); return { response: resposta }; } };
   let saiu = 0;
-  const at = criarAtualizador({ autoUpdater: au, dialog, janela: () => null, antesDeSair: () => { saiu++; }, aviso: () => 'A VPN será desconectada.', ativo: () => ativo });
-  return { au, at, caixas, saiu: () => saiu };
+  const toasts = [];
+  const at = criarAtualizador({ autoUpdater: au, dialog, notificar: (m) => toasts.push(m), janela: () => null, antesDeSair: () => { saiu++; }, aviso: () => 'A VPN será desconectada.', ativo: () => ativo });
+  return { au, at, caixas, toasts, saiu: () => saiu };
 }
 
 test('versão nova: pergunta, baixa, avisa da VPN e reinstala reabrindo', async () => {
@@ -35,7 +36,7 @@ test('com atualização automática desligada, iniciar() não verifica; verifica
   await at.verificar({ pedido: true }); assert.strictEqual(au.checks, 1);
 });
 test('verificação manual sem novidade mostra "já está atualizado"', async () => {
-  const { au, at, caixas } = montar();
+  const { au, at, toasts } = montar();
   await at.verificar({ pedido: true }); au.emit('update-not-available'); await new Promise((r) => setTimeout(r, 10));
-  assert.match(caixas[0].message, /mais recente/);
+  assert.match(toasts[0], /mais recente/);
 });
