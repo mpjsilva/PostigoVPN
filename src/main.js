@@ -6,9 +6,12 @@ const path = require('path');
 const { Store } = require('./store');
 const { Conexao } = require('./openvpn');
 const autostart = require('./autostart');
+const { migrarDadosAntigos } = require('./migracao');
 const { criarAtualizador } = require('./atualizador');
 
-app.setName('OpenVPN Connect');
+app.setName('PostigoVPN');
+// Identidade única da janela: nome do .desktop = StartupWMClass = app_id (sem isso o ícone vira genérico).
+if (process.platform === 'linux') app.setDesktopName('postigovpn.desktop');
 if (!app.requestSingleInstanceLock()) { app.quit(); }
 
 const ICONE = path.join(__dirname, '..', 'assets', 'icone.png');
@@ -23,7 +26,7 @@ function criarJanela() {
   nativeTheme.themeSource = tema === 'claro' ? 'light' : tema === 'escuro' ? 'dark' : 'system';
   janela = new BrowserWindow({
     width: 980, height: 720, minWidth: 760, minHeight: 540, show: false,
-    title: 'OpenVPN Connect', icon: ICONE, autoHideMenuBar: true,
+    title: 'PostigoVPN', icon: ICONE, autoHideMenuBar: true,
     backgroundColor: nativeTheme.shouldUseDarkColors ? '#0c0d12' : '#eef0f7',
     webPreferences: { preload: path.join(__dirname, 'preload.js'), contextIsolation: true, nodeIntegration: false, sandbox: true },
   });
@@ -43,7 +46,7 @@ function menuBandeja() {
   const ativo = ['conectado', 'conectando', 'autenticando', 'reconectando'].includes(ultimoEstado.estado);
   const perfis = store.listar();
   return Menu.buildFromTemplate([
-    { label: 'Abrir OpenVPN Connect', click: mostrar },
+    { label: 'Abrir PostigoVPN', click: mostrar },
     { type: 'separator' },
     ...(ativo ? [{ label: 'Desconectar', click: () => conexao.desconectar() }]
       : perfis.length ? perfis.map((p) => ({ label: `Conectar: ${p.nome}`, enabled: !p.exigeCredenciais || p.temCredenciais, click: () => conectar(p.id) }))
@@ -57,7 +60,7 @@ function menuBandeja() {
 function criarBandeja() {
   try {
     bandeja = new Tray(nativeImage.createFromPath(ICONE).resize({ width: 22, height: 22 }));
-    bandeja.setToolTip('OpenVPN Connect');
+    bandeja.setToolTip('PostigoVPN');
     bandeja.on('click', () => (janela && janela.isVisible() ? janela.hide() : mostrar()));
     bandeja.setContextMenu(menuBandeja());
   } catch { bandeja = null; }
@@ -66,7 +69,7 @@ function criarBandeja() {
 function atualizarBandeja() {
   if (!bandeja) return;
   const rot = { conectado: 'Conectado', conectando: 'Conectando…', autenticando: 'Autenticando…', reconectando: 'Reconectando…', desconectado: 'Desconectado', erro: 'Erro', desconectando: 'Desconectando…' };
-  bandeja.setToolTip(`OpenVPN Connect — ${rot[ultimoEstado.estado] || ''}`);
+  bandeja.setToolTip(`PostigoVPN — ${rot[ultimoEstado.estado] || ''}`);
   bandeja.setContextMenu(menuBandeja());
 }
 
@@ -112,8 +115,8 @@ function registrarIpc() {
     if (!store.listar().length) return { ok: false, motivo: 'Não há conexões para exportar.' };
     const data = new Date().toISOString().slice(0, 10);
     const r = await dialog.showSaveDialog(janela, {
-      title: 'Exportar conexões', defaultPath: path.join(os.homedir(), `conexoes-openvpn-${data}.json`),
-      filters: [{ name: 'Conexões OpenVPN Connect', extensions: ['json'] }],
+      title: 'Exportar conexões', defaultPath: path.join(os.homedir(), `conexoes-postigovpn-${data}.json`),
+      filters: [{ name: 'Conexões PostigoVPN', extensions: ['json'] }],
     });
     if (r.canceled || !r.filePath) return { ok: false, cancelado: true };
     fs.writeFileSync(r.filePath, JSON.stringify(store.exportar({ incluirCredenciais: Boolean(incluirCredenciais) }), null, 2), { mode: 0o600 });
@@ -148,10 +151,15 @@ function registrarIpc() {
 }
 
 app.whenReady().then(() => {
-  store = new Store(path.join(app.getPath('userData')));
+  // Traz conexões, senhas e preferências do app antigo (OpenVPN Connect), se existirem, antes de abrir o armazenamento.
+  const dados = app.getPath('userData');
+  const antigoDe = migrarDadosAntigos(dados, [path.join(app.getPath('appData'), 'OpenVPN Connect'), path.join(app.getPath('appData'), 'openvpn-connect')]);
+  if (antigoDe) console.warn('[migração] dados trazidos de', antigoDe);
+  store = new Store(dados);
   registrarIpc();
   criarJanela();
   criarBandeja();
+  autostart.migrarAntigo();
   autostart.sincronizar();
   if (app.isPackaged) {
     try {

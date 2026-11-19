@@ -4,7 +4,8 @@ const path = require('path');
 const crypto = require('crypto');
 const { nomeDoArquivo, precisaCredenciais } = require('./parse');
 
-const FORMATO = 'openvpn-connect/conexoes';
+const FORMATO = 'postigovpn/conexoes';
+const FORMATOS_ACEITOS = [FORMATO, 'openvpn-connect/conexoes']; // o antigo vem de pacotes exportados na 1.1.x
 const VERSAO_FORMATO = 1;
 
 class Store {
@@ -123,7 +124,7 @@ class Store {
   }
 
   importarPacote(pacote) {
-    if (!pacote || pacote.formato !== FORMATO || !Array.isArray(pacote.conexoes)) throw new Error('Arquivo de conexões inválido.');
+    if (!pacote || !FORMATOS_ACEITOS.includes(pacote.formato) || !Array.isArray(pacote.conexoes)) throw new Error('Arquivo de conexões inválido.');
     const importadas = [], ignoradas = [];
     for (const c of pacote.conexoes) {
       try {

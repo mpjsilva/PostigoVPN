@@ -1,20 +1,20 @@
 {
-  "name": "openvpn-connect",
-  "productName": "OpenVPN Connect",
-  "version": "1.1.1",
-  "description": "Cliente gráfico para perfis .ovpn, no visual Liquid Glass do Dual Messenger.",
+  "name": "postigovpn",
+  "productName": "PostigoVPN",
+  "version": "1.2.0",
+  "description": "PostigoVPN: interface gráfica para o OpenVPN (CLI), no visual Liquid Glass do Dual Messenger.",
   "main": "src/main.js",
   "author": "mpjsilva",
   "private": true,
   "scripts": {
     "start": "electron .",
     "test": "node --test tests/*.test.js",
-    "dist": "electron-builder --linux AppImage deb rpm --publish never",
+    "dist": "electron-builder --linux AppImage deb --publish never && npm run dist:rpm",
     "dist:rpm": "scripts/rpm/gerar-rpm.sh"
   },
   "build": {
-    "appId": "local.openvpnconnect.app",
-    "artifactName": "OpenVPNConnect-${version}.${ext}",
+    "appId": "local.postigovpn.app",
+    "artifactName": "PostigoVPN-${version}.${ext}",
     "linux": {
       "target": [
         "AppImage",
@@ -22,18 +22,35 @@
         "rpm"
       ],
       "category": "Network;Utility",
-      "icon": "assets/icone.png",
+      "icon": "build/icones",
       "desktop": {
         "entry": {
-          "StartupWMClass": "local.openvpnconnect.app"
+          "StartupWMClass": "PostigoVPN"
         }
       },
-      "maintainer": "mpjsilva <56980262+mpjsilva@users.noreply.github.com>"
+      "maintainer": "mpjsilva <56980262+mpjsilva@users.noreply.github.com>",
+      "executableName": "postigovpn",
+      "syncDesktopName": true
     },
     "deb": {
       "depends": [
+        "libgtk-3-0 | libgtk-3-0t64",
+        "libnotify4",
+        "libnss3",
+        "libxss1",
+        "libxtst6",
+        "xdg-utils",
+        "libatspi2.0-0 | libatspi2.0-0t64",
+        "libuuid1",
+        "libsecret-1-0",
         "openvpn",
         "policykit-1 | polkitd"
+      ],
+      "fpm": [
+        "--replaces",
+        "openvpn-connect",
+        "--conflicts",
+        "openvpn-connect"
       ]
     },
     "rpm": {
@@ -41,7 +58,9 @@
         "--depends",
         "openvpn",
         "--depends",
-        "polkit"
+        "polkit",
+        "--replaces",
+        "openvpn-connect"
       ]
     },
     "files": [
@@ -54,7 +73,7 @@
       {
         "provider": "github",
         "owner": "mpjsilva",
-        "repo": "openvpn-connect"
+        "repo": "PostigoVPN"
       }
     ]
   },
@@ -62,13 +81,13 @@
     "electron": "38.8.6",
     "electron-builder": "26.18.1"
   },
-  "homepage": "https://github.com/mpjsilva/openvpn-connect",
-  "desktopName": "openvpn-connect.desktop",
+  "homepage": "https://github.com/mpjsilva/PostigoVPN",
+  "desktopName": "postigovpn.desktop",
   "dependencies": {
     "electron-updater": "^6.8.11"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mpjsilva/openvpn-connect.git"
+    "url": "git+https://github.com/mpjsilva/PostigoVPN.git"
   }
 }

@@ -7,7 +7,7 @@
 
 const HORAS = 6;
 
-function criarAtualizador({ autoUpdater, dialog, janela, antesDeSair, nome = 'OpenVPN Connect', aviso = () => '', ativo = () => true, log = () => {}, intervaloHoras = HORAS }) {
+function criarAtualizador({ autoUpdater, dialog, janela, antesDeSair, nome = 'PostigoVPN', aviso = () => '', ativo = () => true, log = () => {}, intervaloHoras = HORAS }) {
   autoUpdater.autoDownload = false;
   autoUpdater.autoInstallOnAppQuit = false;
 

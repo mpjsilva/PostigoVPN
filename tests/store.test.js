@@ -44,6 +44,11 @@ test('exportar com credenciais as leva e importar as restaura', () => {
 });
 test('pacote inválido e conexão ruim dentro do pacote', () => {
   assert.throws(() => novo().importarPacote({ x: 1 }), /inválido/);
-  const r = novo().importarPacote({ formato: 'openvpn-connect/conexoes', conexoes: [{ nome: 'ruim', ovpn: 'lixo' }] });
+  const r = novo().importarPacote({ formato: 'postigovpn/conexoes', conexoes: [{ nome: 'ruim', ovpn: 'lixo' }] });
   assert.strictEqual(r.ignoradas.length, 1);
+});
+test('importa pacote exportado pelo app antigo (formato openvpn-connect/conexoes)', () => {
+  const r = novo().importarPacote({ formato: 'openvpn-connect/conexoes', versao: 1, conexoes: [{ nome: 'Casa', ovpn: OVPN }] });
+  assert.strictEqual(r.importadas.length, 1);
+  assert.strictEqual(novo().exportar().formato, 'postigovpn/conexoes');
 });

@@ -20,7 +20,7 @@ test('versão nova: pergunta, baixa, avisa da VPN e reinstala reabrindo', async 
   const { au, caixas, saiu } = montar();
   au.emit('update-available', { version: '2.0.0' });
   await new Promise((r) => setTimeout(r, 20));
-  assert.match(caixas[0].message, /OpenVPN Connect/); assert.match(caixas[0].detail, /VPN será desconectada/);
+  assert.match(caixas[0].message, /PostigoVPN/); assert.match(caixas[0].detail, /VPN será desconectada/);
   assert.ok(au.baixou); assert.deepStrictEqual(au.instalou, [false, true]); assert.strictEqual(saiu(), 1);
 });
 test('"Depois" não baixa e não pergunta de novo a mesma versão', async () => {
