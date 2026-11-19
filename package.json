@@ -9,7 +9,7 @@
   "scripts": {
     "start": "electron .",
     "test": "node --test tests/*.test.js",
-    "dist": "electron-builder --linux AppImage deb --publish never && npm run dist:rpm",
+    "dist": "electron-builder --linux AppImage deb --publish never && npm run dist:rpm && node scripts/latest-yml.js",
     "dist:rpm": "scripts/rpm/gerar-rpm.sh"
   },
   "build": {
@@ -79,7 +79,8 @@
   },
   "devDependencies": {
     "electron": "38.8.6",
-    "electron-builder": "26.18.1"
+    "electron-builder": "26.18.1",
+    "js-yaml": "^4.3.2"
   },
   "homepage": "https://github.com/mpjsilva/PostigoVPN",
   "desktopName": "postigovpn.desktop",
