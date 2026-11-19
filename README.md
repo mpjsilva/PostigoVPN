@@ -24,3 +24,9 @@ npm run dist:rpm   # rpm, num contêiner Fedora (scripts/rpm)
 ```
 
 Atualização automática: `electron-updater` lê `latest-linux.yml` da última release; só atua no app empacotado.
+
+## Aviso
+
+Cliente **não oficial**. “OpenVPN” e o logotipo são marcas da OpenVPN Inc. e aparecem aqui só para indicar
+compatibilidade com o OpenVPN; este projeto não tem relação com a OpenVPN Inc. nem com o app oficial
+“OpenVPN Connect”.
