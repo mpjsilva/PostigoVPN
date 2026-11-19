@@ -151,7 +151,7 @@ function registrarIpc() {
 }
 
 app.whenReady().then(() => {
-  // Traz conexões, senhas e preferências do app antigo (OpenVPN Connect), se existirem, antes de abrir o armazenamento.
+  // Traz conexões, senhas e preferências das versões anteriores (pastas de dados antigas), se existirem, antes de abrir o armazenamento.
   const dados = app.getPath('userData');
   const antigoDe = migrarDadosAntigos(dados, [path.join(app.getPath('appData'), 'OpenVPN Connect'), path.join(app.getPath('appData'), 'openvpn-connect')]);
   if (antigoDe) console.warn('[migração] dados trazidos de', antigoDe);

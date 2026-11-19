@@ -1,5 +1,5 @@
 'use strict';
-// Migração do app antigo (OpenVPN Connect 1.0/1.1) para o PostigoVPN: conexões, credenciais e preferências.
+// Migração das versões anteriores (pacote openvpn-connect 1.0/1.1): conexões, credenciais e preferências.
 // Só copia os arquivos do app (nada do cache do Chromium) e não apaga a pasta antiga.
 const fs = require('fs');
 const path = require('path');

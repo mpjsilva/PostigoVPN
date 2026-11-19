@@ -5,7 +5,7 @@ const os = require('os');
 const path = require('path');
 
 const NOME_ARQUIVO = 'postigovpn.desktop';
-const NOME_ARQUIVO_ANTIGO = 'openvpn-connect.desktop'; // do app antigo (OpenVPN Connect)
+const NOME_ARQUIVO_ANTIGO = 'openvpn-connect.desktop'; // atalho das versões anteriores (pacote openvpn-connect)
 
 function pastaAutostart(env = process.env, casa = os.homedir()) {
   return path.join(env.XDG_CONFIG_HOME || path.join(casa, '.config'), 'autostart');

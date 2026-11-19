@@ -15,12 +15,11 @@ Interface gráfica (Electron) para o **OpenVPN CLI** no Linux, no visual Liquid 
 Baixe em [Releases](https://github.com/mpjsilva/PostigoVPN/releases): `.AppImage`, `.deb` ou `.rpm`.
 Requer `openvpn` e `polkit` (o `.deb` e o `.rpm` já os declaram como dependência).
 
-### Veio do OpenVPN Connect (versões 1.0 e 1.1)?
+### Atualizando do pacote `openvpn-connect` (versões 1.0 e 1.1)
 
-Este projeto se chamava *OpenVPN Connect*. Instalando o `.deb` ou o `.rpm` do PostigoVPN, o pacote antigo
-`openvpn-connect` é substituído automaticamente. No primeiro uso, o PostigoVPN traz sozinho suas conexões,
-senhas salvas e preferências (a pasta antiga `~/.config/OpenVPN Connect` é mantida, pode apagar depois), e
-o "iniciar com o sistema" passa para o atalho novo. Pacotes `.json` exportados pela versão antiga continuam importáveis.
+Instalar o `.deb` ou o `.rpm` substitui o pacote `openvpn-connect`. No primeiro uso, conexões, senhas salvas e
+preferências são copiadas de `~/.config/OpenVPN Connect` (a pasta é mantida), e o "iniciar com o sistema" passa
+para o atalho `postigovpn.desktop`. Pacotes `.json` exportados pelas versões anteriores continuam importáveis.
 
 ## Desenvolver
 
@@ -40,5 +39,4 @@ atalho e mostra ícone genérico.
 ## Aviso
 
 Projeto **independente e não oficial**. “OpenVPN” e o logotipo do OpenVPN são marcas da OpenVPN Inc. e
-aparecem aqui só para indicar a compatibilidade com o OpenVPN; este projeto não tem relação com a
-OpenVPN Inc. nem com o app oficial “OpenVPN Connect”.
+aparecem aqui só para indicar a compatibilidade com o OpenVPN; este projeto não tem relação com a OpenVPN Inc.
